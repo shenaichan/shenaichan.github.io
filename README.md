@@ -35,3 +35,12 @@ to-do:
 - finish descriptions
 - add images
 - fix links, attributions, dates
+
+to-do tomorrow specifically:
+- sprint adding documentation, optimizing at the start for finishing off as many as possible, using momentum to finish more
+- push frequently
+- aim for MVP, like 85%, not 100%
+- take a 10min break
+- finish 2 illustrations
+- look at site with fresh eyes and do a final round of quality checking
+- post on instagram
