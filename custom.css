@@ -27,13 +27,13 @@
 }
 
 h1 {
-    font-family: "KnewaveRegular";
+    font-family: "KnewaveRegular", Courier, monospace;
     color: white;
     font-size: 52px;
 }
 
 h2 {
-    font-family: "KnewaveRegular";
+    font-family: "KnewaveRegular", Courier, monospace;
     color: white;
     font-size:30px;
 }
@@ -105,6 +105,8 @@ canvas, svg {
     border: 2px solid rgb(220, 255, 220);
     border-radius: 20px;
     width: 100%;
+    object-fit: cover;
+    aspect-ratio: 7 / 5;
 }
 
 .about-pic {
@@ -138,7 +140,7 @@ a:visited {
 /* mouse over link */
 a:hover  {
     background-color: white;
-    color: rgb(0, 191, 168);
+    color: rgb(24, 12, 90);
 }
 
 .unset-links, .unset-links:link, .unset-links:visited, .unset-links:hover {
@@ -193,6 +195,10 @@ header {
     bottom: 20px;
     right: 20px;
     width: 50px;
+}
+
+body {
+    background-color: rgb(29, 23, 120);
 }
   
 
