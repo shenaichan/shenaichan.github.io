@@ -1,0 +1,44 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    font-size: medium;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: darkslateblue;
+}
+
+.container {
+    width: 800px;
+    max-width: 80%;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: hsl(240, 80%, 70%);
+    border: 2px solid hsl(240, 80%, 50%);
+    border-radius: 5px;
+    padding: 10px 10px;
+    color: white;
+    outline: none;
+}
+
+.btn:hover {
+    background-color: hsl(240, 80%, 50%);
+}

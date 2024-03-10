@@ -1,0 +1,198 @@
+@font-face {
+    font-family: 'KnewaveRegular';
+    src: url("./webfonts/knewave-webfont.eot");
+    src: url('./webfonts/knewave-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./webfonts/knewave-webfont.woff') format('woff'),
+         url('./webfonts/knewave-webfont.ttf') format('truetype'),
+         url('./webfonts/knewave-webfont.svg#KnewaveRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'KnewaveOutlineRegular';
+    src: url('./webfonts/knewave-outline-webfont.eot');
+    src: url('./webfonts/knewave-outline-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./webfonts/knewave-outline-webfont.woff') format('woff'),
+         url('./webfonts/knewave-outline-webfont.ttf') format('truetype'),
+         url('./webfonts/knewave-outline-webfont.svg#KnewaveOutlineRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+.ourple {
+    background-color:plum;
+}
+
+h1 {
+    font-family: "KnewaveRegular";
+    color: white;
+    font-size: 52px;
+}
+
+h2 {
+    font-family: "KnewaveRegular";
+    color: white;
+    font-size:30px;
+}
+
+h3 {
+    font-family:Courier, monospace;
+    color: rgb(220, 255, 220);
+    font-weight: bold;
+    font-size:20px;
+}
+
+p {
+    font-family:Courier, monospace;
+    color: white;
+    font-size:16px;
+}
+
+.proj-p p{
+    font-family:'Courier New', Courier, monospace;
+    color: white;
+    font-size: 14px;
+    margin: 0px;
+}
+
+.small-break{
+    margin-top: 10px !important;
+}
+
+canvas, svg {
+    position: fixed;
+    z-index: -1;
+}
+
+.vert-align {
+    padding: 10vh 0;
+}
+
+.small-margin {
+    margin: 10px 10px;
+}
+
+.main-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 70vw;
+    min-width: 300px;
+}
+
+.main-txt {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 700px;
+    min-width: 250px;
+}
+
+#highlight {
+    color: rgb(220, 255, 220);
+}
+
+.body-highlight {
+    background-color: rgb(24, 12, 90);
+}
+
+.left-pics {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    border: 2px solid rgb(220, 255, 220);
+    border-radius: 20px;
+    width: 100%;
+}
+
+.about-pic {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.latte {
+    display: block;
+    margin-left: 0;
+    margin-right: auto;
+    margin-bottom: 20px;
+    /* border: 4px solid white; */
+    border-radius: 20px;
+    width: 80%;
+}
+
+/* unvisited link */
+a:link {
+    color: rgb(200, 250, 255);
+}
+
+/* visited link */
+a:visited {
+    color: rgb(220, 205, 255);
+}
+
+/* mouse over link */
+a:hover  {
+    background-color: white;
+    color: rgb(0, 191, 168);
+}
+
+.unset-links, .unset-links:link, .unset-links:visited, .unset-links:hover {
+    color: unset;
+    background-color: unset;
+    all: unset;
+}
+
+.main-pics{
+    transition: transform .2s;
+    width:65%;
+    margin:0 auto;
+}
+
+.main-page-links{
+    transition: transform .2s;
+}
+
+.main-page-links:hover{
+    transform:scale(1.1);
+}
+
+.icons {
+    display: inline-nlock;
+    height: 40px;
+    margin: 0 3px;
+    transition: transform .2s;
+}
+
+.icons:hover {
+    transform:scale(1.2);
+}
+
+.back-home {
+    transition: transform .2s;
+}
+
+.back-home:hover {
+    transform:scale(1.2);
+}
+
+header {
+    padding: 30px;
+}
+
+.main-header, footer {
+    padding: 50px;
+}
+
+.to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+}
+  
+

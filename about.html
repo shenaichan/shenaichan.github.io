@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>about me</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="custom.css" rel="stylesheet">
+  <script src="js/two.min.js"></script>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+
+</head>
+
+<body class="">
+  <script>
+    window.msex = 0;
+    window.msey = 0;
+    addEventListener("pointermove", (event) => {
+      window.msex = event.clientX;
+      window.msey = event.clientY;
+    });
+  </script>
+  <script>
+    // Import Two.js from a CDN
+    // import Two from 'https://cdn.skypack.dev/two.js@latest';
+    // Initialize an instance to render
+    // render to the screen. Try changing
+    // the `type` property to:
+    //   Two.Types.canvas
+    //   Two.Types.webgl
+    // To see different rendering styles.
+    const two = new Two({
+      type: Two.Types.svg,
+      //fullscreen: true,
+      autostart: true
+    }).appendTo(document.body);
+
+    two.width = window.innerWidth;
+    two.height = window.innerHeight;
+
+    // Define a list of colors for
+    // the linear gradient to cycle
+    // through.
+    // const colors = [
+    //   'rgb(255, 64, 64)',
+    //   'rgb(255, 128, 0)',
+    //   'rgb(0, 200, 255)',
+    //   'rgb(0, 191, 168)',
+    //   'rgb(153, 102, 255)',
+    //   'rgb(255, 244, 95)'
+    // ];
+    const colors = [
+      // 'rgb(160, 80, 160)',
+      // 'rgb(255, 128, 0)',
+      'rgb(0, 191, 168)',
+      'rgb(0, 191, 168)',
+      'rgb(0, 191, 168)',
+      // 'rgb(0, 200, 255)',
+      // 'rgb(0, 200, 255)'
+      // 'rgb(0, 191, 168)',
+      // 'rgb(153, 102, 255)',
+      // 'rgb(255, 244, 95)'
+    ];
+    // Define the index of the
+    // current color the gradient
+    // is starting from.
+    let colorIndex = 0;
+
+    // Cache the center of the canvas
+    // for positioning objects.
+    const cx = two.width / 2;
+    const cy = two.height / 2;
+
+    // 4 component values used to
+    // create a vertical line.
+    let x1 = 0;
+    let y1 = - cy;
+    const x2 = 0;
+    const y2 = cy;
+
+    // Create a linear gradient with ramp 
+    // points starting at (x1, y1) and ending
+    // at (x2, y2) with three stops evenly
+    // spread across the gradient.
+    let gradient = two.makeLinearGradient(x1, y1, x2, y2,
+      new Two.Stop(0, colors[0]),
+      new Two.Stop(1, colors[1]),
+      new Two.Stop(1, colors[2])
+    );
+    gradient.units = 'userSpaceOnUse';
+
+    // Gradients are effects and can be applied
+    // to either the `fill` or the `stroke` of
+    // an Two.Path or other object. Make a rectangle
+    // to be filled by the gradient.
+    const rectangle = two.makeRectangle(cx, cy, two.width, two.height);
+    rectangle.noStroke();
+    rectangle.fill = gradient;
+
+    // 3 component values used
+    // to create a circle.
+    x1 = 0;
+    y1 = 0;
+    // Get the higher value of
+    // the two to make a gradient
+    // that fills the window.
+    //let radius = Math.max(two.width, two.height);
+
+    let radius = Math.max(two.width, two.height) * 1.5;
+    // let radius = Math.max(two.width/2, two.height/2);
+
+    // Create a radial gradient 
+    // with center `x1`, `y1`
+    // and radius `radius` with 
+    // two stops along the ramp.
+    gradient = two.makeRadialGradient(x1, y1, radius,
+      new Two.Stop(0, 'rgba(29, 23, 120, 1)', 1),
+      new Two.Stop(0.5, 'rgba(29, 23, 120, 0)', 0)
+    );
+    gradient.units = 'userSpaceOnUse';
+
+    // `vignette` is the bounding
+    // rectangle to be filled with
+    // the radial gradient.
+    const vignette = two.makeRectangle(cx, cy, two.width, two.height);
+    vignette.noStroke();
+    vignette.fill = gradient;
+
+    // Two temporary vector
+    // variables are needed
+    // during the animation loop.
+    // First is to keep track
+    // of the mouse position.
+    // const mouse = new Two.Vector(cx, cy);
+    // Second is an empty value
+    // that is set every frame
+    // to calculate the distance
+    // between the center of the
+    // screen and the mouse.
+    const delta = new Two.Vector();
+
+    // Native HTML event handler
+    // to listen when the mouse
+    // or finger moves and store
+    // its position.
+    // two.renderer.domElement.addEventListener('pointermove', pointermove, false);
+
+    // Two.js event handlers
+    // to listen when the page
+    // resizes and the animation
+    // updates.
+    two.bind('resize', resize)
+      .bind('update', update);
+
+    // Set the `mouse` variable
+    // to the cursor's position.
+    // function pointermove(e) {
+    //   mouse.set(e.clientX, e.clientY);
+    // }
+
+    addEventListener("resize", (event) => {
+      two.width = window.innerWidth;
+      two.height = window.innerHeight;
+    });
+
+    // Force both the rectangle
+    // and vignette to be the size
+    // of the canvas when the window
+    // changes sizes.
+    function resize() {
+
+      two.width = window.innerWidth;
+      two.height = window.innerHeight;
+
+      const cx = two.width / 2;
+      const cy = two.height / 2;
+
+      let gradient = rectangle.fill;
+      gradient.left.y = - cy;
+      gradient.right.y = cy;
+
+      // Set the size of the rectangle
+      // to the size of the canvas.
+      rectangle.width = two.width;
+      rectangle.height = two.height;
+      vignette.width = two.width;
+      vignette.height = two.height;
+
+      // Center both rectangles.
+      rectangle.translation.set(cx, cy);
+      vignette.translation.copy(rectangle.translation);
+
+      // Update the radius variable
+      // to accurately reflect the size
+      // during the `update` handler.
+      radius = Math.max(two.width, two.height) * 1.5;
+
+    }
+
+    // Animate the scene
+    function update(frameCount) {
+      // testing
+      // radius = 100;
+
+      let gradient = vignette.fill;
+      const cx = two.width / 2;
+      const cy = two.height / 2;
+      // const cx = window.msex;
+      // const cy = window.msey;
+
+      const oscillation = 0.5 * (Math.sin(frameCount / 30) + 1);
+      const r25 = radius * 0.30;
+      const r75 = radius * 0.70;
+
+      // Make the radial gradient oscillate
+      gradient.radius = r25 * oscillation + r75;
+
+      const destX = window.msex - cx;
+      const destY = window.msey - cy;
+
+      // const shenai = document.getElementById("highlight");
+      // const oscillation_shenai = 0.5 * (Math.sin(frameCount / 20) + 1);
+      // shenai.style.color = "rgb(200, "+(255-oscillation_shenai*25)+", "+(220+oscillation_shenai*35)+")";
+
+      delta.set(destX, destY)
+        .sub(gradient.center)
+        .multiplyScalar(0.125);  // Used to "ease" into dest
+
+      // Move the gradient's center
+      // toward the mouse as a kind
+      // of "look at" behavior.
+      gradient.center.add(delta);
+
+      gradient = rectangle.fill;
+      const o = gradient.stops[1].offset;
+
+      if (o < 0.001) {
+
+        // Make the second stop clamp
+        // to the bottom edge.
+        gradient.stops[1].offset = 1;
+
+        // Select a new color from the palette
+        colorIndex = (colorIndex + 1) % colors.length;
+
+        for (let i = 0; i < gradient.stops.length; i++) {
+          const stop = gradient.stops[i];
+          const index = colorIndex + i;
+          // Set the new colors
+          stop.color = colors[index % colors.length];
+        }
+
+      } else {
+
+        // Animate the second stop
+        // towards the top of the screen
+        gradient.stops[1].offset -= o * 0.125;
+
+      }
+
+    }
+
+  </script>
+  <header class="text-center">
+    <p ><a  href="/">
+      ← Home</a></p>
+  </header>
+  <div class="container  main-container">
+    <h1 class="text-center" id="highlight">ABOUT ME</h1>
+
+    <div class="row align-items-start">
+      <div class="col-md col-xs">
+        <img class="about-pic" src="images/abt.png"></img>
+      </div>
+      <div class="col-md-8 col-xs ">
+        <p>
+          Oh hey there! Thanks for stopping by. </p>
+        <p>
+          My name is Shenai Chan and I'm in my final year at Carnegie Mellon, slated to graduate in
+          May 2024 with a B.S. in Electrical and Computer Engineering and minors in Human-Computer Interaction
+          and <a href="https://ideate.cmu.edu/undergraduate-programs/physical-computing/" target="_blank"
+          rel="noopener noreferrer">Physical Computing</a>.</p> 
+        <p>
+          My interests and skills lie along the axes of embedded systems/IoT, full-stack web development, UX design & research, and technical communication.
+          I am currently seeking full-time employment in
+          the Bay Area beginning June 2024, so please shoot me an 
+          <a href="mailto:shenaichan@cmu.edu" target="_blank" rel="noopener noreferrer"  title="Email">email</a> (shenaichan [at] cmu [dot] edu) if you're hiring and I seem like a good fit!
+        </p>
+
+        <p><span class="body-highlight">I'm currently exploring...</span>  DAWs/music production, voice assistants, soft electronics.</p>
+        <p><span class="body-highlight">I'd like to explore...</span>  making games/interactive narratives, Blender, mixed reality.</p>
+        <p>Thanks for checking out my little homemade site and have a nice day!</p>
+        <br>
+        <p style="font-size:12px">P.S. Here is a picture of my dog. His name is Latte.</p>
+        <img class="latte" id="latte" src="images/latte.JPG"></img>
+      </div>
+    </div>
+  </div>
+  <footer></footer> 
+  <script>
+    function detectMob() {
+      const toMatch = [
+          /Android/i,
+          /webOS/i,
+          /iPhone/i,
+          /iPad/i,
+          /iPod/i,
+          /BlackBerry/i,
+          /Windows Phone/i
+      ];
+    
+      return toMatch.some((toMatchItem) => {
+          return navigator.userAgent.match(toMatchItem);
+      });
+    }
+
+    if (detectMob() === true) {
+      const latte = document.getElementById("latte");
+      latte.style.width = "100%";
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

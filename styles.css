@@ -1,0 +1,42 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    font-size: medium;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+body {
+    padding: 20px; /* space between border and content */
+    margin: 0; /* without this you have to scroll if the content gets too big? */
+    display: flex; /* not sure what this does, TODO: look up how this works */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* without this the container locks to the top of the page */
+    background-color: lavender;
+}
+
+.container {
+    max-width: 800px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: hsl(240, 80%, 70%);
+    border: 2px solid hsl(240, 80%, 50%);
+    border-radius: 5px;
+    padding: 10px 10px;
+    color: white;
+    outline: none;
+}
+
+.btn:hover {
+    background-color: hsl(240, 80%, 50%);
+}

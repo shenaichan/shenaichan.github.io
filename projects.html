@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>projects!</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="custom.css" rel="stylesheet">
+  <script src="js/two.min.js"></script>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+
+</head>
+
+<body class="">
+  <script>
+    window.msex = 0;
+    window.msey = 0;
+    addEventListener("pointermove", (event) => {
+      window.msex = event.clientX;
+      window.msey = event.clientY;
+    });
+  </script>
+  <script>
+    // Import Two.js from a CDN
+    // import Two from 'https://cdn.skypack.dev/two.js@latest';
+    // Initialize an instance to render
+    // render to the screen. Try changing
+    // the `type` property to:
+    //   Two.Types.canvas
+    //   Two.Types.webgl
+    // To see different rendering styles.
+    const two = new Two({
+      type: Two.Types.svg,
+      //fullscreen: true,
+      autostart: true
+    }).appendTo(document.body);
+
+    two.width = window.innerWidth;
+    two.height = window.innerHeight;
+
+    // Define a list of colors for
+    // the linear gradient to cycle
+    // through.
+    // const colors = [
+    //   'rgb(255, 64, 64)',
+    //   'rgb(255, 128, 0)',
+    //   'rgb(0, 200, 255)',
+    //   'rgb(0, 191, 168)',
+    //   'rgb(153, 102, 255)',
+    //   'rgb(255, 244, 95)'
+    // ];
+    const colors = [
+      // 'rgb(160, 80, 160)',
+      // 'rgb(255, 128, 0)',
+      'rgb(0, 191, 168)',
+      'rgb(0, 191, 168)',
+      'rgb(0, 191, 168)',
+      // 'rgb(0, 200, 255)',
+      // 'rgb(0, 200, 255)'
+      // 'rgb(0, 191, 168)',
+      // 'rgb(153, 102, 255)',
+      // 'rgb(255, 244, 95)'
+    ];
+    // Define the index of the
+    // current color the gradient
+    // is starting from.
+    let colorIndex = 0;
+
+    // Cache the center of the canvas
+    // for positioning objects.
+    const cx = two.width / 2;
+    const cy = two.height / 2;
+
+    // 4 component values used to
+    // create a vertical line.
+    let x1 = 0;
+    let y1 = - cy;
+    const x2 = 0;
+    const y2 = cy;
+
+    // Create a linear gradient with ramp 
+    // points starting at (x1, y1) and ending
+    // at (x2, y2) with three stops evenly
+    // spread across the gradient.
+    let gradient = two.makeLinearGradient(x1, y1, x2, y2,
+      new Two.Stop(0, colors[0]),
+      new Two.Stop(1, colors[1]),
+      new Two.Stop(1, colors[2])
+    );
+    gradient.units = 'userSpaceOnUse';
+
+    // Gradients are effects and can be applied
+    // to either the `fill` or the `stroke` of
+    // an Two.Path or other object. Make a rectangle
+    // to be filled by the gradient.
+    const rectangle = two.makeRectangle(cx, cy, two.width, two.height);
+    rectangle.noStroke();
+    rectangle.fill = gradient;
+
+    // 3 component values used
+    // to create a circle.
+    x1 = 0;
+    y1 = 0;
+    // Get the higher value of
+    // the two to make a gradient
+    // that fills the window.
+    //let radius = Math.max(two.width, two.height);
+
+    let radius = Math.max(two.width, two.height) * 1.5;
+    // let radius = Math.max(two.width/2, two.height/2);
+
+    // Create a radial gradient 
+    // with center `x1`, `y1`
+    // and radius `radius` with 
+    // two stops along the ramp.
+    gradient = two.makeRadialGradient(x1, y1, radius,
+      new Two.Stop(0, 'rgba(29, 23, 120, 1)', 1),
+      new Two.Stop(0.5, 'rgba(29, 23, 120, 0)', 0)
+    );
+    gradient.units = 'userSpaceOnUse';
+
+    // `vignette` is the bounding
+    // rectangle to be filled with
+    // the radial gradient.
+    const vignette = two.makeRectangle(cx, cy, two.width, two.height);
+    vignette.noStroke();
+    vignette.fill = gradient;
+
+    // Two temporary vector
+    // variables are needed
+    // during the animation loop.
+    // First is to keep track
+    // of the mouse position.
+    // const mouse = new Two.Vector(cx, cy);
+    // Second is an empty value
+    // that is set every frame
+    // to calculate the distance
+    // between the center of the
+    // screen and the mouse.
+    const delta = new Two.Vector();
+
+    // Native HTML event handler
+    // to listen when the mouse
+    // or finger moves and store
+    // its position.
+    // two.renderer.domElement.addEventListener('pointermove', pointermove, false);
+
+    // Two.js event handlers
+    // to listen when the page
+    // resizes and the animation
+    // updates.
+    two.bind('resize', resize)
+      .bind('update', update);
+
+    // Set the `mouse` variable
+    // to the cursor's position.
+    // function pointermove(e) {
+    //   mouse.set(e.clientX, e.clientY);
+    // }
+
+    addEventListener("resize", (event) => {
+      two.width = window.innerWidth;
+      two.height = window.innerHeight;
+    });
+
+    // Force both the rectangle
+    // and vignette to be the size
+    // of the canvas when the window
+    // changes sizes.
+    function resize() {
+
+      two.width = window.innerWidth;
+      two.height = window.innerHeight;
+
+      const cx = two.width / 2;
+      const cy = two.height / 2;
+
+      let gradient = rectangle.fill;
+      gradient.left.y = - cy;
+      gradient.right.y = cy;
+
+      // Set the size of the rectangle
+      // to the size of the canvas.
+      rectangle.width = two.width;
+      rectangle.height = two.height;
+      vignette.width = two.width;
+      vignette.height = two.height;
+
+      // Center both rectangles.
+      rectangle.translation.set(cx, cy);
+      vignette.translation.copy(rectangle.translation);
+
+      // Update the radius variable
+      // to accurately reflect the size
+      // during the `update` handler.
+      radius = Math.max(two.width, two.height) * 1.5;
+
+    }
+
+    // Animate the scene
+    function update(frameCount) {
+      // testing
+      // radius = 100;
+
+      let gradient = vignette.fill;
+      const cx = two.width / 2;
+      const cy = two.height / 2;
+      // const cx = window.msex;
+      // const cy = window.msey;
+
+      const oscillation = 0.5 * (Math.sin(frameCount / 30) + 1);
+      const r25 = radius * 0.30;
+      const r75 = radius * 0.70;
+
+      // Make the radial gradient oscillate
+      gradient.radius = r25 * oscillation + r75;
+
+      const destX = window.msex - cx;
+      const destY = window.msey - cy;
+
+      // const shenai = document.getElementById("highlight");
+      // const oscillation_shenai = 0.5 * (Math.sin(frameCount / 20) + 1);
+      // shenai.style.color = "rgb(200, "+(255-oscillation_shenai*25)+", "+(220+oscillation_shenai*35)+")";
+
+      delta.set(destX, destY)
+        .sub(gradient.center)
+        .multiplyScalar(0.125);  // Used to "ease" into dest
+
+      // Move the gradient's center
+      // toward the mouse as a kind
+      // of "look at" behavior.
+      gradient.center.add(delta);
+
+      gradient = rectangle.fill;
+      const o = gradient.stops[1].offset;
+
+      if (o < 0.001) {
+
+        // Make the second stop clamp
+        // to the bottom edge.
+        gradient.stops[1].offset = 1;
+
+        // Select a new color from the palette
+        colorIndex = (colorIndex + 1) % colors.length;
+
+        for (let i = 0; i < gradient.stops.length; i++) {
+          const stop = gradient.stops[i];
+          const index = colorIndex + i;
+          // Set the new colors
+          stop.color = colors[index % colors.length];
+        }
+
+      } else {
+
+        // Animate the second stop
+        // towards the top of the screen
+        gradient.stops[1].offset -= o * 0.125;
+
+      }
+
+    }
+
+  </script>
+  <header class="text-center">
+    <p ><a  href="/">
+      ← Home</a></p>
+  </header>
+  <div class="container  main-container">
+    <h1 class="text-center" id="highlight">PROJECTS</h1>
+
+    <p class="text-center">A curated suite of projects spanning tech, art, writing, and pedagogy.</p>
+    <br><br>
+    <div class="projects-body">
+
+    <!-- RTOS FINISHED -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="real-time-operating-system">
+            <a class="unset-links"
+              href="/projects.html#real-time-operating-system">
+              Real-Time Operating System
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 Februrary 2024 — Present | 👥 Lexi Batrachenko
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">C</span> | 
+              <span class="body-highlight">Linux</span> |
+              <span class="body-highlight">Embedded Systems</span> |
+              <span class="body-highlight">Firmware</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer"></a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Building real-time OS for 18-649: Distributed Embedded Systems. Utilizes Rate-Monotonic Scheduling, 
+              Immediate Priority Ceiling Protocol, memory protection, and mutexing for organization of multiple threads
+              in compliance with real-life timing constraints.
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Public Mobility Robot for Honda Research Institute -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="scottybot">
+            <a class="unset-links"
+              href="/projects.html#scottybot">
+              Public Mobility Robot for Honda Research Institute
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 January 2024 — Present | 👥 18-540 course members
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Design Research</span> | 
+              <span class="body-highlight">Storyboarding</span> | 
+              <span class="body-highlight">Wireframing</span> |
+              <span class="body-highlight">Microsoft Azure</span> | 
+              <span class="body-highlight">GPT API</span> | 
+              <span class="body-highlight">Prompt Engineering</span> | 
+              <span class="body-highlight">Python</span> | 
+              <span class="body-highlight">Voice Assistants</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer"></a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Leading the design research committee and human-robot intelligence team in building a 
+              public guide robot prototype for Honda.  
+              
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Multiplayer Online AI Explainability Study -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="inverse-rl">
+            <a class="unset-links"
+              href="/projects.html#inverse-rl">
+              Multiplayer Online AI Explainability Study
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 May 2023 — Present
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Python</span> | 
+              <span class="body-highlight">Flask</span> | 
+              <span class="body-highlight">SQLAlchemy</span> | 
+              <span class="body-highlight">Databases</span> | 
+              <span class="body-highlight">Websockets</span> | 
+              <span class="body-highlight">JS</span> | 
+              <span class="body-highlight">HTML/CSS</span> | 
+              <span class="body-highlight">Multi-player Games</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="https://github.com/SUCCESS-MURI/closed_loop_teaching_study" target="_blank" rel="noopener noreferrer">GitHub Repo</a> (single-player study iteration)
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Coding primarily backend/databases/sockets for online user study on teaching users robot policies via demonstrations.
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              AI interpretability/explainability is super important! And being able to design a user study based on legacy code has 
+              definitely given me insight into how to understand, and then design large systems.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Personal Site -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="personal-site">
+            <a class="unset-links"
+              href="/projects.html#personal-site">
+              Personal Site
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 March 2024
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">HTML/CSS</span> | 
+              <span class="body-highlight">Bootstrap</span> | 
+              <span class="body-highlight">JS</span> | 
+              <span class="body-highlight">Two.js</span> | 
+              <span class="body-highlight">Technical Writing</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              This site, lovingly hacked together with raw HTML/CSS/JS, a dash of Bootstrap, 
+              and some <a href="" target="_blank" rel="noopener noreferrer"></a>Two.js</a>. Background graphic is modified from []'s <a href="" target="_blank" rel="noopener noreferrer"></a>gradient demo</a>, 
+              and accent font is []'s <a href="" target="_blank" rel="noopener noreferrer"></a>Knewave</a>. All illustrations 
+              by yours truly <3
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              I will probably get around to refactoring the codebase with React and Jekyll later, though.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- SyllAble -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="syllable">
+            <a class="unset-links"
+              href="/projects.html#syllable">
+              SyllAble
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 January 2023 — April 2023 | 👥 Molly Niehaus
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Figma</span> | 
+              <span class="body-highlight">Design Research</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Final Prototype</a> | 
+              <a href="" target="_blank" rel="noopener noreferrer">Final Report</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Designed and prototyped a language learning app that focuses on the unmet need of
+              novel sound production and discrimination.
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Also, being able to interview people about their experience with language learning
+              was such a touching process, as a lot of our conversation topics veered into discussions of
+              culture, family, and alienation. 
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Generative love letter postcards -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="love-letters">
+            <a class="unset-links"
+              href="/projects.html#love-letters">
+              Wish You Were Here: Generative Love Letter Postcards
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 November 2021 — December 2021 
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Python</span> | 
+              <span class="body-highlight">VSketch</span> |
+              <span class="body-highlight">Markov Chains</span> |
+              <span class="body-highlight">Generative Art</span> |
+              <span class="body-highlight">Plotters</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Final Documentation</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Also displayed in Spring 2023 in the Frame Gallery in <i>What the Historians Would Not Say</i>,
+              an art show centered on the queer femme Asian American experience.
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              "He loved her to the point of invention." - Sarah Ruhl, <i>The Clean House and Other Plays</i>
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- SoftWare/CookWare -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="software-cookware">
+            <a class="unset-links"
+              href="/projects.html#software-cookware">
+              SoftWare/CookWare
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 September 2023 — Present 
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Arduino</span> | 
+              <span class="body-highlight">Soft Technologies</span> | 
+              <span class="body-highlight">Zines</span> | 
+              <span class="body-highlight">Colored Pencil</span>
+              
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer"></a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Received a <a href="" target="_blank" rel="noopener noreferrer">Frank-Ratchye Further Fund</a> grant to research, draw, and build a short zine 
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Lately, I've been interested in food histories and how they act as a microcosm of overarching cultural movements.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Music glove -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="music-glove">
+            <a class="unset-links"
+              href="/projects.html#music-glove">
+              Heat and Motion Sensitive Music Glove
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 October 2023 | 👥 
+              <a href="" target="_blank" rel="noopener noreferrer">Charlotte Lamm</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Chloe Sun</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Yasemin Rees</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Grace Kolosek</a>
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Arduino</span> | 
+              <span class="body-highlight">RF/Wireless Communications</span> | 
+              <span class="body-highlight">Max MSP</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Final Documentation</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Built the tech stack for the glove, including sensors, send/receive data packaging and protocol
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Push button -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="push-button">
+            <a class="unset-links"
+              href="/projects.html#push-button">
+              Bruising Push Button
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 September 2023 | 👥 
+              <a href="" target="_blank" rel="noopener noreferrer">Charlotte Lamm</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Chloe Sun</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Yasemin Rees</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Grace Kolosek</a>
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Embedded C</span> | 
+              <span class="body-highlight">Linux</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer"></a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Building real-time OS for 18-649: Distributed Embedded Systems. Utilizes Rate-Monotonic Scheduling, IPCP, memory protection.
+              Finish this section lol
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Hospital friend -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="hospital-friend">
+            <a class="unset-links"
+              href="/projects.html#hospital-friend">
+              Hospital Friend
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 Februrary 2023 | 👥 
+              <a href="" target="_blank" rel="noopener noreferrer">Lauren Kung</a>
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Arduino</span> | 
+              <span class="body-highlight">Sewing</span> | 
+              <span class="body-highlight">Physical Fabrication</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Stuffed animal with embedded intelligence built for TartanHacks 2023.
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Blind-accessible digital scale -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="digital-scale">
+            <a class="unset-links"
+              href="/projects.html#digital-scale">
+              Blind-Accessible Digital Scale
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 November 2021 — December 2021 | 👥 Julia, John Hewitt
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Embedded C</span> | 
+              <span class="body-highlight">Linux</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer"></a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Building real-time OS for 18-649: Distributed Embedded Systems. Utilizes Rate-Monotonic Scheduling, IPCP, memory protection.
+              Finish this section lol
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Poetry alarm -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="poetry-alarm">
+            <a class="unset-links"
+              href="/projects.html#poetry-alarm">
+              Good Morning Poetry Alarm
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 October 2021 
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Arduino</span> | 
+              <span class="body-highlight">Physical Fabrication</span> | 
+              <span class="body-highlight">Laser Cutting</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Final Documentation</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Accessory to alarm that senses the sound of an alarm and prints from a corpus
+              of poetry to incentivize waking up.
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Poetry in general -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="poetry">
+            <a class="unset-links"
+              href="/projects.html#poetry">
+              Contemporary and Marginalized Poetics Workshop
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 August 2023 — Present | 👥
+              <a href="" target="_blank" rel="noopener noreferrer">Divyasri Krishnan</a>
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Creative Writing</span> | 
+              <span class="body-highlight">Pedagogy</span> |
+              <span class="body-highlight">Course Design</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Syllabus</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Created and taught course on marginalized poetics 
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              I also keep a running portfolio of poetry on <a href="" target="_blank" rel="noopener noreferrer">Instagram</a>, 
+              and would love to explore publishing one day.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+
+    <!-- Blogging -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="blogging">
+            <a class="unset-links"
+              href="/projects.html#blogging">
+              Blogging
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 Ongoing
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Creative Writing</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Substack</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              <!-- It used to be public, but I'm currently in the process of reworking how much information about me 
+              is openly available on the internet, so now it's only viewable by request. However, I'm not that
+              picky about access, so if I recognize you I'll probably let you in! -->
+              I also occasionally blog about assorted life updates, media, project ideas, etc. on Substack! 
+              It used to be public, but it's currently only viewable by request. However, I'm not that
+              picky about access, so if I recognize your name I'll probably let you in. Notably, 
+              <a href="" target="_blank" rel="noopener noreferrer">this essay on eggs</a> won a 2022
+              Adamson Award for non-fiction.
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              a charming and only occasionally cringeworthy path down memory lane.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Phys comp docu -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="phys-comp-docu">
+            <a class="unset-links"
+              href="/projects.html#phys-comp-docu">
+              Documentation for Physical Computing Cards
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 June 2022 — August 2022 
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Technical Writing</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Website</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Building real-time OS for 18-649: Distributed Embedded Systems. Utilizes Rate-Monotonic Scheduling, IPCP, memory protection.
+              Finish this section lol
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- engineering music fashion -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="engineering-music-fashion">
+            <a class="unset-links"
+              href="/projects.html#engineering-music-fashion">
+              Engineering Through Music and Fashion Program
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 June 2022 — August 2022 
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Arduino</span> |
+              <span class="body-highlight">Pedagogy</span> |
+              <span class="body-highlight">Course Design</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer"></a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Assist with teaching and course design for summer program on engineering
+              through music and fashion, in collaboration with the 
+              <a href="" target="_blank" rel="noopener noreferrer">CENTER that CARES</a> Judith Uchidiuno
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+
+    <!-- Wobbling opulence -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="wobbling-opulence">
+            <a class="unset-links"
+              href="/projects.html#wobbling-opulence">
+              Wobbling Opulence
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 November 2023 | 👥 
+              <a href="" target="_blank" rel="noopener noreferrer">Charlotte Lamm</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Chloe Sun</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Yasemin Rees</a>, 
+              <a href="" target="_blank" rel="noopener noreferrer">Grace Kolosek</a>
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Set, Costume, Hair & Makeup, and Prop Design</span> 
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Final Docmuentation</a> |
+              <a href="" target="_blank" rel="noopener noreferrer">Final Video</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Shoutouts to Chloe especially for doing an absolutely insane job with the video editing and direction of photography :)
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Visual design work -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="visual-design">
+            <a class="unset-links"
+              href="/projects.html#visual-design">
+              Visual Design
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 Ongoing 
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Photoshop</span> | 
+              <span class="body-highlight">Procreate</span> | 
+              <span class="body-highlight">Clip Studio Paint</span>
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Portfolio</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              , notably, 
+              <a href="" target="_blank" rel="noopener noreferrer">various</a>
+              <a href="" target="_blank" rel="noopener noreferrer">shirt</a>
+              <a href="" target="_blank" rel="noopener noreferrer">designs</a>, as well as
+              <a href="" target="_blank" rel="noopener noreferrer">a suite of branding</a> for
+              Scotch'n'Soda Theatre's Fall 2020 original student play, <i>Behind Closed Doors</i> (typography and logo
+              by <a href="" target="_blank" rel="noopener noreferrer">Ellis Jones</a>!)
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    
+    <!-- sketches/illu -->
+      <div class="row align-items-start">
+        <!-- Left column -->
+        <div class="col-md col-xs">
+          <!-- Image URL -->
+          <img class="left-pics" src="images/abt.png" alt=""></img>
+        </div>
+        <!-- Right column -->
+        <div class="col-md-8 col-xs ">
+          <!-- Project title and section jump-->
+          <h3 id="sketches-illustration">
+            <a class="unset-links"
+              href="/projects.html#sketches-illustration">
+              Sketches & Illustration
+            </a>
+          </h3>
+          <!-- Description -->
+          <div class="proj-p">
+            <!-- Date and collaborators -->
+            <p>
+              📅 Ongoing
+            </p>
+            <!-- Tech/medium tags -->
+            <p> 
+              <span class="body-highlight">Procreate</span> | 
+              <span class="body-highlight">Clip Studio Paint</span> | 
+              <span class="body-highlight">Graphite</span> | 
+              <span class="body-highlight">Charcoal</span> 
+            </p>
+            <!-- External links -->
+            <p>
+              <a href="" target="_blank" rel="noopener noreferrer">Portfolio</a>
+            </p>
+            <!-- Proj description -->
+            <p class="small-break">
+              Building real-time OS for 18-649: Distributed Embedded Systems. Utilizes Rate-Monotonic Scheduling, IPCP, memory protection.
+              Finish this section lol
+            </p>
+            <!-- Proj motivation -->
+            <p class="small-break"><span class="body-highlight">Why?</span> 
+              Being able to architect and debug low level
+              systems code is one of the most satisfying feelings in the world. I'm particularly fascinated
+              by firmware/sensors/tangible UX as the junction where the real world meets the digital.
+            </p>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="/projects.html#">
+    <img class="to-top back-home" id="to-top" src="images/to-top.png"></img>
+  </a> 
+  <footer></footer> 
+  <script>
+    function detectMob() {
+      const toMatch = [
+          /Android/i,
+          /webOS/i,
+          /iPhone/i,
+          /iPad/i,
+          /iPod/i,
+          /BlackBerry/i,
+          /Windows Phone/i
+      ];
+    
+      return toMatch.some((toMatchItem) => {
+          return navigator.userAgent.match(toMatchItem);
+      });
+    }
+
+    if (detectMob() === true) {
+      const to_top = document.getElementById("to-top");
+      to_top.style.right = "5px";
+      to_top.style.bottom = "10px";
+      to_top.style.width = "35px";
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
