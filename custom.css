@@ -43,6 +43,7 @@ h3 {
     color: rgb(220, 255, 220);
     font-weight: bold;
     font-size:20px;
+    cursor: pointer;
 }
 
 p {
@@ -159,6 +160,7 @@ a:hover  {
 
 .main-page-links{
     transition: transform .2s;
+    cursor: pointer;
 }
 
 .main-page-links:hover{
@@ -170,6 +172,7 @@ a:hover  {
     height: 40px;
     margin: 0 3px;
     transition: transform .2s;
+    cursor: pointer;
 }
 
 .icons:hover {
@@ -217,4 +220,8 @@ hr {
 
 .project-columns {
     margin-bottom: 15px;
+}
+
+a {
+    cursor: pointer;
 }
