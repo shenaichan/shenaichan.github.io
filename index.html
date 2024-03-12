@@ -108,6 +108,7 @@
     //let radius = Math.max(two.width, two.height);
 
     let radius = Math.max(two.width, two.height) * 1.5;
+    radius = Math.max(radius, 1200);
     // let radius = Math.max(two.width/2, two.height/2);
 
     // Create a radial gradient 
@@ -195,6 +196,8 @@
       // to accurately reflect the size
       // during the `update` handler.
       radius = Math.max(two.width, two.height) * 1.5;
+      radius = Math.max(radius, 1200);
+
 
     }
 
