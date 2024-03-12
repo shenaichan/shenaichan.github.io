@@ -29,19 +29,19 @@
 }
 
 h1 {
-    font-family: "KnewaveRegular", Courier, monospace;
+    font-family: "KnewaveRegular", monospace;
     color: white;
     font-size: 52px;
 }
 
 h2 {
-    font-family: "KnewaveRegular", Courier, monospace;
+    font-family: "KnewaveRegular", monospace;
     color: white;
     font-size:30px;
 }
 
 h3 {
-    font-family:Courier, monospace;
+    font-family:monospace;
     color: rgb(220, 255, 220);
     font-weight: bold;
     font-size:20px;
