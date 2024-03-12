@@ -22,8 +22,7 @@ fonts used:
 | name | tag/description |
 | --- | --- |
 |knewave | h1 (main titles), h2 (subpage titles) |
-|courier | h3 (project titles), p (general body text, subtitles) |
-|courier new | p.proj-p (projects body text) |
+|monospace | h3 (project titles), p (general body text, subtitles) |
 
 to-do:
 - update email on resume

@@ -22,6 +22,8 @@
 
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap');
+
 .ourple {
     background-color:plum;
 }
@@ -47,15 +49,14 @@ h3 {
 }
 
 p {
-    font-family:Courier, monospace;
+    font-family: monospace;
+    /* font-variation-settings: 'wght' 375, 'MONO' 0, 'CASL' 0, 'slnt' 0, 'CRSV' 0.5; */
     color: white;
-    font-size:16px;
+    font-size:17px;
 }
 
 .proj-p p{
-    font-family:'Courier New', Courier, monospace;
-    color: white;
-    font-size: 14px;
+    font-size: 15px;
     margin: 0px;
 }
 
