@@ -25,7 +25,4 @@ fonts used:
 |monospace | h3 (project titles), p (general body text, subtitles) |
 
 to-do:
-- update email on resume
-- add website to resume
-- add website to linkedin
 - populate linkedin (help)
