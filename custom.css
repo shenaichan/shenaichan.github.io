@@ -22,7 +22,19 @@
 
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap');
+@font-face {
+    font-family: "DM Mono";
+    src: url("DM_Mono/DMMono-Regular.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "DM Sans";
+    src: url("DM_Sans/DMSans-VariableFont_opsz,wght.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 .ourple {
     background-color:plum;
@@ -41,15 +53,13 @@ h2 {
 }
 
 h3 {
-    font-family:monospace;
+    font-family: "DM Mono", monospace;
     color: rgb(220, 255, 220);
-    font-weight: bold;
     font-size:20px;
 }
 
 p {
-    font-family: monospace;
-    /* font-variation-settings: 'wght' 375, 'MONO' 0, 'CASL' 0, 'slnt' 0, 'CRSV' 0.5; */
+    font-family: "DM Mono", monospace;
     color: white;
     font-size:17px;
 }
