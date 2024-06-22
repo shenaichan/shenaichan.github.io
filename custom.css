@@ -30,9 +30,16 @@
 }
 
 @font-face {
-    font-family: "DM Sans";
-    src: url("DM_Sans/DMSans-VariableFont_opsz,wght.ttf") format('truetype');
+    font-family: "DM Mono Med";
+    src: url("DM_Mono/DMMono-Medium.ttf") format('truetype');
     font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Josefin Sans";
+    src: url("Josefin_Sans/JosefinSans-VariableFont_wght.ttf") format('truetype');
+    /* font-weight: normal; */
     font-style: normal;
 }
 
@@ -41,13 +48,13 @@
 }
 
 h1 {
-    font-family: "KnewaveRegular", monospace;
+    font-family: "DM Mono Med", monospace;
     color: white;
     font-size: 52px;
 }
 
 h2 {
-    font-family: "KnewaveRegular", monospace;
+    font-family: "DM Mono", monospace;
     color: white;
     font-size:30px;
 }
@@ -59,13 +66,14 @@ h3 {
 }
 
 p {
-    font-family: "DM Mono", monospace;
+    font-family: "Josefin Sans", arial;
     color: white;
-    font-size:17px;
+    font-size:20px;
+    font-weight:300;
 }
 
 .proj-p p{
-    font-size: 15px;
+    font-size: 17px;
     margin: 0px;
 }
 
@@ -105,7 +113,8 @@ canvas, svg {
 }
 
 .body-highlight {
-    background-color: rgb(24, 12, 90);
+    background-color: rgb(0, 0, 0);
+    font-weight:350;
 }
 
 .left-pics {
@@ -120,7 +129,12 @@ canvas, svg {
     object-fit: cover;
     object-position: 50% 50%;
     aspect-ratio: 7 / 5;
+    /* filter: grayscale(50%); */
 }
+
+/* .left-pics:hover {
+    filter: grayscale(0%);
+} */
 
 .about-pic {
     display: block;
@@ -153,7 +167,7 @@ a:visited {
 /* mouse over link */
 a:hover  {
     background-color: white;
-    color: rgb(24, 12, 90);
+    color: rgb(0, 0, 0);
 }
 
 .unset-links, .unset-links:link, .unset-links:visited, .unset-links:hover {
@@ -213,7 +227,7 @@ header {
 }
 
 body {
-    background-color: rgb(29, 23, 120);
+    background-color: rgb(35, 32, 52);
 }
   
 hr {
